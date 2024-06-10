@@ -7,6 +7,7 @@ import TopRestaurants from '../screens/TopRestaurants';
 import Restaurants from '../screens/Restaurants';
 import { Icon } from 'react-native-elements';
 import screenOptions from './screenOptions';
+import Account from '../screens/account/Account';
 
 const Tab = createBottomTabNavigator();
 
@@ -54,7 +55,7 @@ export default function Navigation() {
         
             <Tab.Screen
              name="account"
-              component={TopRestaurants} 
+              component={Account} 
               options={{
                 title: "Cuenta"
               }}
