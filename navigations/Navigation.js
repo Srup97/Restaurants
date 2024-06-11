@@ -2,12 +2,12 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Icon } from 'react-native-elements';
-import Restaurants from '../screens/Restaurants';
-import Favorites from '../screens/Favorites';
-import TopRestaurants from '../screens/TopRestaurants';
 import Search from '../screens/Search';
 import AccountStack from './AccountStack';
-
+import FavoritesStack from './FavoriresStack';
+import RestaurantsStack from './RestaurantsStack';
+import TopRestaurantsStack from './TopRestaurantsStack'
+import SearchStack from './SearchStack';
 const Tab = createBottomTabNavigator();
 
 export default function Navigation() {
@@ -41,34 +41,39 @@ export default function Navigation() {
         initialRouteName="restaurants"
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color }) => screenOptions(route, color),
-          inactiveTintColor: '#442384',
-          activeTintColor: '#00a680',
+          inactiveTintColor: "#442384",
+          activeTintColor: "#00a680",
         })}
       >
+
         <Tab.Screen
           name="restaurants"
-          component={Restaurants}
-          options={{ title: 'Restaurantes' }}
-        />
+          component={RestaurantsStack}
+          options={{ headerShown: false }}
+          />
+
         <Tab.Screen
           name="favorites"
-          component={Favorites}
-          options={{ title: 'Favoritos' }}
-        />
+          component={FavoritesStack}
+          options={{ headerShown: false }}
+          />
+
         <Tab.Screen
           name="top-restaurants"
-          component={TopRestaurants}
-          options={{ title: 'Top Restaurantes' }}
-        />
+          component={TopRestaurantsStack}
+          options={{ headerShown: false }}
+          />
+
         <Tab.Screen
           name="search"
-          component={Search}
-          options={{ title: 'Buscar' }}
-        />
+          component={SearchStack}
+          options={{ headerShown: false }}
+          />
+
         <Tab.Screen
           name="account"
           component={AccountStack}
-          options={{ title: 'Cuenta' }}
+                options={{ headerShown: false }}
         />
       </Tab.Navigator>
     </NavigationContainer>
