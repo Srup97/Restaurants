@@ -10,7 +10,7 @@ export default function UserGuest() {
     <ScrollView centerContent style={styles.viewBody}> 
       <View style={styles.container}>
         <Image
-          source={require("../../assets/logoResstaurant.png")}
+          source={require("../../assets/logo.png")}
           resizeMode="contain"
           style={styles.image}
           containerStyle={styles.imageContainer}
