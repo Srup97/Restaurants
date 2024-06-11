@@ -5,14 +5,14 @@ import Navigation from './navigations/Navigation';
 
 export default function App() {
   return (
-      <Navigation/>
+      <Navigation />
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#66434',
     alignItems: 'center',
     justifyContent: 'center',
   },
