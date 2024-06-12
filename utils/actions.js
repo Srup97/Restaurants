@@ -23,6 +23,7 @@ export const registerNewUser = async (email, password) => {
     try {
         await firebase.auth().createUserWithEmailAndPassword(email, password)
     } catch (error) {
+        result.statusResponse = false
         result.error = "Este correo ya ha sido registrado"
     }
     return result
@@ -32,3 +33,13 @@ export const closeSesion = () => {
     return firebase.auth().signOut();
 }
 
+export const loginWithEmailPassword = async (email, password) => {
+    const result = {statusResponse: true, error: null}
+    try {
+        await firebase.auth().signInWithEmailAndPassword(email, password)
+    } catch (error) {
+        result.statusResponse = false
+        result.error = "Usuario o Contraseña no validos"
+    }
+    return result
+}
