@@ -2,10 +2,12 @@ import { StyleSheet} from 'react-native'
 import React from 'react'
 import { Overlay } from 'react-native-elements'
 
-export default function modal({isVisible, setVisible, children }) {
+export default function Modal({isVisible, setVisible, children }) {
   return (
     <Overlay
         isVisible={isVisible}
+        overlayStyle={styles.overlay}
+        onBackdropPress={() => setVisible(false)}
     >
       {
         children
@@ -14,4 +16,10 @@ export default function modal({isVisible, setVisible, children }) {
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    overlay: {
+        width: "75%",
+        height: 375
+    }
+
+})
