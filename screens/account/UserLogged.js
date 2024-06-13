@@ -6,6 +6,7 @@ import { closeSesion, getCurrentUser } from '../../utils/actions'
 import Toast from 'react-native-easy-toast'
 import Loading from '../../components/Loading'
 import InfoUser from '../../components/account/InfoUser'
+import AccountOptions from '../../components/account/AccountOptions'
 
 export default function userLogged() {
   const toastRef = useRef()
@@ -36,10 +37,13 @@ export default function userLogged() {
       }
    
 
-      <Text>Account Options</Text>
+      <AccountOptions
+       user={user}
+       toastRef={toastRef}
+       />
 
       <Button
-        title="Cerrar Session"
+        title="Cerrar Session" 
         buttonStyle={styles.btnCloseSesion}
         titleStyle={styles.btnCloseSesionTitle}
         onPress={() => {

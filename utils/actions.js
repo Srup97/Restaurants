@@ -48,21 +48,30 @@ export const loginWithEmailPassword = async (email, password) => {
 export const uploadImage = async (image, path, name) => {
     console.log("subiendo imagen");
     const result = { statusResponse: false, error: null, url: null };
-    const ref = firebase.storage().ref(path).child(name);
-    console.log("conexion a firebase");
-    const blob = await fileToBlob(image);
-    console.log("justo antess de intertarlo");
+
     try {
-      console.log("intentandolo");
-      await ref.put(blob);
-      const url = await firebase.storage().ref(`${path}/${name}`).getDownloadURL();
-      result.statusResponse = true;
-      result.url = url;
+        console.log("conexión a Firebase Storage");
+        const ref = firebase.storage().ref(path).child(name);
+        console.log("Referencia de almacenamiento creada:", ref);
+
+        const blob = await fileToBlod(image);
+        console.log("Blob generado:", blob);
+
+        console.log("Intentando subir la imagen...");
+        await ref.put(blob);
+        console.log("Imagen subida exitosamente");
+
+        const url = await ref.getDownloadURL();
+        console.log("URL de la imagen:", url);
+
+        result.statusResponse = true;
+        result.url = url;
     } catch (error) {
-      result.error = error;
+        console.error("Error al subir la imagen:", error);
+        result.error = error;
     }
     return result;
-  };
+};
   
 export const updateProfile = async(data) => {
     console.log("actualizando perfil");

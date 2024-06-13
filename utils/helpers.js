@@ -32,9 +32,14 @@ export function validateEmail(email) {
     return response;
 };
 
-
 export const fileToBlod = async (path) => {
-    const file = await fetch(path);
-    const blob = await file.blob();
-    return blob;
+    try {
+        const file = await fetch(path);
+        const blob = await file.blob();
+        console.log("Blob creado en fileToBlod:", blob);
+        return blob;
+    } catch (error) {
+        console.error("Error en fileToBlod:", error);
+        throw error;
+    }
 };
