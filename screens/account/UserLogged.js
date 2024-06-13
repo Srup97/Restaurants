@@ -25,7 +25,14 @@ export default function userLogged() {
   return (
     <View style={styles.container}>
       {
-         user && <InfoUser user= {user} />
+         user && (
+          <View>
+           <InfoUser
+            user= {user}
+             setLoading={setLoading}
+              setloadingText={setloadingText} />
+           </View>
+         )
       }
    
 
