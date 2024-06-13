@@ -7,43 +7,42 @@ import { fileToBlod } from './helpers';
 const db = firebase.firestore(firebaseApp);
 
 export const isUserLogged = () => {
-    let isLogged = false
+    let isLogged = false;
     firebase.auth().onAuthStateChanged((user) => {
-        user !== null && (isLogged = true)
-    })
-    return isLogged
-} 
+        user !== null && (isLogged = true);
+    });
+    return isLogged;
+};
 
 export const getCurrentUser = () => {
     return firebase.auth().currentUser;
-}
-
+};
 
 export const registerNewUser = async (email, password) => {
-    const result = {statusResponse: true, error: null}
+    const result = {statusResponse: true, error: null};
     try {
-        await firebase.auth().createUserWithEmailAndPassword(email, password)
+        await firebase.auth().createUserWithEmailAndPassword(email, password);
     } catch (error) {
-        result.statusResponse = false
-        result.error = "Este correo ya ha sido registrado"
+        result.statusResponse = false;
+        result.error = "Este correo ya ha sido registrado";
     }
-    return result
-}
+    return result;
+};
 
 export const closeSesion = () => {
     return firebase.auth().signOut();
-}
+};
 
 export const loginWithEmailPassword = async (email, password) => {
-    const result = {statusResponse: true, error: null}
+    const result = {statusResponse: true, error: null};
     try {
-        await firebase.auth().signInWithEmailAndPassword(email, password)
+        await firebase.auth().signInWithEmailAndPassword(email, password);
     } catch (error) {
-        result.statusResponse = false
-        result.error = "Usuario o Contraseña no validos"
+        result.statusResponse = false;
+        result.error = "Usuario o Contraseña no validos";
     }
-    return result
-}
+    return result;
+};
 
 export const uploadImage = async (image, path, name) => {
     console.log("subiendo imagen");
@@ -75,14 +74,49 @@ export const uploadImage = async (image, path, name) => {
   
 export const updateProfile = async(data) => {
     console.log("actualizando perfil");
-    const result = {statusResponse: true, error: null}
+    const result = {statusResponse: true, error: null};
     try {
-        await firebase.auth().currentUser.updateProfile(data)
-        
+        await firebase.auth().currentUser.updateProfile(data);
+    } catch (error) {
+        result.statusResponse = false;
+        result.error = error;
+    }
+    return result;
+};
+
+export const verifyPassword = async (password) => {
+    const result = { statusResponse: true, error: null };
+    const user = firebase.auth().currentUser;
+
+    if (!user) {
+        result.statusResponse = false;
+        result.error = "No user is logged in.";
+        return result;
+    }
+
+    const credentials = firebase.auth.EmailAuthProvider.credential(
+        user.email,
+        password
+    );
+
+    try {
+        await user.reauthenticateWithCredential(credentials);
+    } catch (error) {
+        result.statusResponse = false;
+        result.error = error;
+    }
+
+    return result;
+};
+
+
+export const updateEmail = async(email) => {
+    const result = { statusResponse: true, error: null }
+    try {
+        await firebase.auth().currentUser.updateEmail(email)
     } catch (error) {
         result.statusResponse = false
         result.error = error
     }
-
-    return result
+    return result     
 }

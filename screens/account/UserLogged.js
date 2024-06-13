@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, {useState, useRef, useEffect} from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Button } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
 import { closeSesion, getCurrentUser } from '../../utils/actions'
@@ -15,68 +15,66 @@ export default function userLogged() {
   const [loading, setLoading] = useState(false)
   const [loadingText, setloadingText] = useState(" ")
   const [user, setUser] = useState(null)
+  const [reloadUser, setReloadUser] = useState(false)
 
-
-  useEffect(() =>{
-
+  useEffect(() => {
     setUser(getCurrentUser())
-
-  }, [])
+    setReloadUser(false)
+  }, [reloadUser])
 
   return (
     <View style={styles.container}>
-      {
-         user && (
-          <View>
-           <InfoUser
-            user= {user}
-             setLoading={setLoading}
-              setloadingText={setloadingText} />
-           </View>
-         )
-      }
-   
-
+      {user && (
+        <View>
+          <InfoUser
+            user={user}
+            setLoading={setLoading}
+            setloadingText={setloadingText}
+          />
+        </View>
+      )}
       <AccountOptions
-       user={user}
-       toastRef={toastRef}
-       />
-
-      <Button
-        title="Cerrar Session" 
-        buttonStyle={styles.btnCloseSesion}
-        titleStyle={styles.btnCloseSesionTitle}
-        onPress={() => {
-          closeSesion();
-          navigation.navigate("restaurants")}
-           }
+        user={user}
+        toastRef={toastRef}
+        setReloadUser={setReloadUser}
+      />
+      <View style={styles.footer}>
+        <Button
+          title="Cerrar Sesión"
+          buttonStyle={styles.btnCloseSesion}
+          titleStyle={styles.btnCloseSesionTitle}
+          onPress={() => {
+            closeSesion();
+            navigation.navigate("restaurants")
+          }}
         />
-
-           <Toast ref={toastRef} position='center' opacity={0.9} />
-           <Loading isVisible={loading} text={loadingText}/>
-
+      </View>
+      <Toast ref={toastRef} position='center' opacity={0.9} />
+      <Loading isVisible={loading} text={loadingText} />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: '100%',  
+    flex: 1,  
     backgroundColor: '#f9f9f9',
+    padding: 10,
   },
-
-  btnCloseSesion:{
-    marginTop: 30,
+  footer: {
+    paddingBottom: 30,
+  },
+  btnCloseSesion: {
     borderRadius: 10,
+    marginTop: 50,
     backgroundColor: '#0066b5',
     borderTopWidth: 1,
     borderTopColor: '#442484',
     borderBottomWidth: 1, 
-    borderbottomColor: '#442484',
-    paddingVertical: 10
+    borderBottomColor: '#442484',
+    paddingVertical: 10,
   },
-
   btnCloseSesionTitle: {
-    color: '#ffffff'
-  }
-})
+    color: '#ffffff',
+  },
+});

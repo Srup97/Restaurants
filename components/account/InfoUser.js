@@ -1,6 +1,6 @@
-import { Alert, StyleSheet, Text, View } from 'react-native'
+import { Alert, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
-import { Avatar } from 'react-native-elements';
+import { Avatar, Icon } from 'react-native-elements';
 import { loadImageFromGallery } from '../../utils/helpers';
 import { updateProfile, uploadImage } from '../../utils/actions';
 
@@ -41,16 +41,24 @@ export default function InfoUser({ user, setLoading, setloadingText }) {
 
   return (
     <View style={styles.container}>
-      <Avatar
-        rounded
-        size="large"
-        source={
-          photoUrl
-            ? { uri: photoUrl }
-            : require("../../assets/avatar-default.jpg")
-        }
-        onPress={() => { changePhoto() }}
-      />
+      <TouchableOpacity onPress={changePhoto}>
+        <Avatar
+          rounded
+          size={100} // Tamaño del avatar más grande
+          source={
+            photoUrl
+              ? { uri: photoUrl }
+              : require("../../assets/avatar-default.jpg")
+          }
+          containerStyle={styles.avatar}
+        />
+        <Icon
+          type="material-community"
+          name="camera"
+          color="#fff"
+          containerStyle={styles.cameraIcon}
+        />
+      </TouchableOpacity>
 
       <View style={styles.infoUser}>
         <Text style={styles.displayName}>
@@ -70,6 +78,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
     paddingVertical: 30
   },
+  avatar: {
+    borderWidth: 4,
+    borderColor: '#fff',
+  },
+  cameraIcon: {
+    position: 'absolute',
+    bottom: 5,
+    right: 5,
+    backgroundColor: '#489AF9',
+    borderRadius: 20,
+    padding: 5,
+  },
   infoUser: {
     marginLeft: 20
   },
@@ -77,4 +97,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingBottom: 5
   }
-})
+});

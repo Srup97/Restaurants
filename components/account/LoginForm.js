@@ -23,9 +23,7 @@ export default function LoginForm() {
     });
   };
 
-    const togglePasswordVisibility = () => {
-        setPasswordVisible(!passwordVisible);
-      };
+   
     
       const loginUser = async () => {
         if (!validateDataLogin(formData, setErrorEmail, setErrorPassword)) {
@@ -66,7 +64,8 @@ export default function LoginForm() {
           <Icon
             type='material-community'
             name={passwordVisible ? 'eye-off-outline' : 'eye-outline'}
-            onPress={togglePasswordVisibility}
+            onPress={()=>setPasswordVisible(!passwordVisible)
+            }
           />
         }
         containerStyle={styles.input}

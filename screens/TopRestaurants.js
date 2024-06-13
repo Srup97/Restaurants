@@ -4,7 +4,7 @@ import React from 'react'
 export default function TopRestaurants() {
   return (
     <View>
-      <Text>Mejores de Restaurantes</Text>
+      <Text>Mejores Restaurantes</Text>
     </View>
   )
 }
