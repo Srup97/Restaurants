@@ -26,6 +26,7 @@ export default function ChangePasswordForm({
   };
 
   const onSubmit = async () => {
+    console.log(formData);
       if(!validatePassword(formData, setErrorNewPassword,setErrorOldPassword, setErrorConfirmPassword)){
         return;
       }
@@ -55,26 +56,11 @@ export default function ChangePasswordForm({
   return (
     <View style={styles.view}>
       
-      <Input
-        placeholder="Ingrese la nueva contraseña"
-        secureTextEntry={!passwordVisible}
-        containerStyle={styles.input}
-        inputStyle={styles.inputText}
-        onChange={(e) => onChange(e, "newPassword")}
-        errorMessage={errorNewPassword}
-        rightIcon={
-          <Icon
-            type="material-community"
-            name={passwordVisible ? "eye-off-outline" : "eye-outline"}
-            onPress={() => setPasswordVisible(!passwordVisible)}
-          />
-        }
-      />
-
 <Input
-        placeholder="Ingrese la contraseña Actual"
+        placeholder="Ingrese tu contraseña Actual"
         secureTextEntry={!passwordVisible}
         containerStyle={styles.input}
+        defaultValue={formData.oldPassword}
         inputStyle={styles.inputText}
         onChange={(e) => onChange(e, "oldPassword")}
         errorMessage={errorOldPassword}
@@ -88,9 +74,28 @@ export default function ChangePasswordForm({
       />
 
 <Input
+        placeholder="Ingrese tu nueva contraseña"
+        secureTextEntry={!passwordVisible}
+        defaultValue={formData.newPassword}
+        containerStyle={styles.input}
+        inputStyle={styles.inputText}
+        onChange={(e) => onChange(e, "newPassword")}
+        errorMessage={errorNewPassword}
+        rightIcon={
+          <Icon
+            type="material-community"
+            name={passwordVisible ? "eye-off-outline" : "eye-outline"}
+            onPress={() => setPasswordVisible(!passwordVisible)}
+          />
+        }
+      />
+
+
+<Input
         placeholder="Confirma la contraseña"
         secureTextEntry={!passwordVisible}
         containerStyle={styles.input}
+        defaultValue={formData.confirmPassword}
         inputStyle={styles.inputText}
         onChange={(e) => onChange(e, "confirmPassword")}
         errorMessage={errorConfirmPassword}

@@ -76,8 +76,8 @@ export const validatePassword = (formData,setErrorNewPassword, setErrorOldPasswo
     isValid = false;
   }
   
-  if (formData.oldPassword !== formData.confirmPassword) {
-    setErrorOldPassword("Las contraseñas no coinciden");
+  if (formData.newPassword !== formData.confirmPassword) {
+    setErrorNewPassword("Las contraseñas no coinciden");
     setErrorConfirmPassword("Las contraseñas no coinciden");
 
     isValid = false;
