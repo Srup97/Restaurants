@@ -1,8 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import { Button, Input, Icon } from "react-native-elements";
-import { validateDataLogin } from "./ValidateDataLogin";
-import { updateEmail, verifyPassword } from "../../utils/actions";
+import { updatePassword, verifyPassword } from "../../utils/actions";
 import { validatePassword } from "./ValidateData";
 
 export default function ChangePasswordForm({
@@ -31,26 +30,24 @@ export default function ChangePasswordForm({
         return;
       }
 
+    setLoading(true);
+    const passwordCheckResult = await verifyPassword(formData.oldPassword);
+    if (!passwordCheckResult.statusResponse) {
+      setLoading(false);
+      setErrorOldPassword("Contraseña Incorrecta");
+      return;
+    }
 
-    // setLoading(true);
-    // const passwordCheckResult = await verifyPassword(formData.password);
-    // if (!passwordCheckResult.statusResponse) {
-    //   setLoading(false);
-    //   setErrorPassword("Contraseña Incorrecta");
-    //   return;
-    // }
+    const result = await updatePassword(formData.newPassword);
+    if (!result.statusResponse) {
+      setErrorNewPassword("Error al cambiar el password, intente mas Tarde");
+      setLoading(false);
+      return;
+    }
 
-    // const result = await updateEmail(formData.email);
-    // if (!result.statusResponse) {
-    //   setErrorEmail("Error al cambiar el email o Este correo esta en uso");
-    //   setLoading(false);
-    //   return;
-    // }
-
-    // setReloadUser(true);
-    // toastRef.current.show("Email actualizado correctamente", 3000);
-    // setShowModal(false);
-    // setLoading(false);
+    toastRef.current.show("Password actualizado correctamente", 3000);
+    setShowModal(false);
+    setLoading(false);
   };
 
   return (

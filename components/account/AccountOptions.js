@@ -11,8 +11,8 @@ export default function AccountOptions({
     user, toastRef, setReloadUser
 }) {
     const [showModal, setShowModal] = useState(false);
-    const [renderComponent, setRenderComponent] = useState(null);
-
+    const [renderComponent, setRenderComponent] = useState(<Text>Nothing</Text>);
+    
     const generateOptions = () => {
         return [
             {
