@@ -1,4 +1,3 @@
-import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
 
@@ -13,7 +12,7 @@ export function validateEmail(email) {
     if (status !== 'granted') {
         Alert.alert(
             'Error',
-            'Debes dar permisos para acceder a la galería de imágenes.'
+            'Debes dar los permisos para acceder a la galeria de imagenes'
         );
         return response;
     }

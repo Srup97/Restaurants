@@ -5,6 +5,7 @@ import { Icon, ListItem } from 'react-native-elements';
 import Modal from '../modal';
 import ChangeDisplayNameForm from './ChangeDisplayNameForm';
 import ChangeEmailForm from './ChangeEmailForm';
+import ChangePasswordForm from './ChangePasswordForm';
 
 export default function AccountOptions({
     user, toastRef, setReloadUser
@@ -54,8 +55,6 @@ export default function AccountOptions({
                 iconColorRight: "#FF4500",
                 onPress: () => selectedComponent("deleteAccount")
             },
-            
-            
         ];
     };
 
@@ -86,7 +85,11 @@ export default function AccountOptions({
 
             case "password":
                 setRenderComponent(
-                    <Text>Cambiar Password</Text>
+                    <ChangePasswordForm
+                        setShowModal={setShowModal}
+                        toastRef={toastRef}
+                        setReloadUser={setReloadUser}
+                    />
                 );
                 break;
         }
