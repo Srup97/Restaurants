@@ -53,5 +53,10 @@ export const styles = StyleSheet.create({
     top: 20,
     right: 20,
   },
+
+  mapStyle: {
+    width: '100%',
+    height: 550,
+  },
   
 });

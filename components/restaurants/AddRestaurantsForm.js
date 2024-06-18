@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dimensions, ScrollView, View, TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 import UploadImage from './UploadImage';
@@ -7,6 +7,8 @@ import { styles } from './AddRestaurantFormStyles';
 import { ValidateData } from './ValidateDataAddRestaurant';
 
 import Modal from '../modal';
+import { getCurrentLocation } from '../../utils/helpers';
+import MapView from 'react-native-maps';
 
 const widthScreen = Dimensions.get("window").width;
 
@@ -69,6 +71,7 @@ export default function AddRestaurantsForm({ toastRef, setLoading, navigation })
           isVisibleMap={isVisibleMap}
           setIsVisibleMap={setIsVisibleMap}
           setLocationRestaurant={setLocationRestaurant}
+          locationRestaurant={locationRestaurant}
           toastRef={toastRef}
         />
       </View>
@@ -78,10 +81,34 @@ export default function AddRestaurantsForm({ toastRef, setLoading, navigation })
   );
 }
 
-function MapRestaurants({ isVisibleMap, setIsVisibleMap, setLocationRestaurant, toastRef  }) {
+function MapRestaurants({ isVisibleMap, setIsVisibleMap, locationRestaurant, setLocationRestaurant, toastRef  }) {
+
+    useEffect(() => {
+      (async () => {
+          const response = await getCurrentLocation()
+          if(response.status) {
+              setLocationRestaurant(response.location)
+              console.log(response.location);
+          }
+      })();
+  }, []);
+
+
   return (
-        <Modal isVisible={isVisibleMap} setVisible={setIsVisibleMap}>
-            <Text>Map is here</Text>
+        <Modal isVisible={isVisibleMap} setVisible={setIsVisibleMap} size={{ width: '90%', height: '75%' }}>
+            <View>
+                {
+                  locationRestaurant && (
+                    <MapView
+                      style={styles.mapStyle}
+                      initialRegion={locationRestaurant}
+                      showsUserLocation
+                    >
+
+                    </MapView>
+                  )
+                }
+            </View>
         </Modal>
   );
 }

@@ -1,5 +1,5 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
 import { map } from 'lodash';
 import { Icon, ListItem } from 'react-native-elements';
 import Modal from '../modal';
@@ -12,6 +12,7 @@ export default function AccountOptions({
 }) {
     const [showModal, setShowModal] = useState(false);
     const [renderComponent, setRenderComponent] = useState(<Text>Nothing</Text>);
+    const [modalSize, setModalSize] = useState({ width: '90%', height: '45%' });
     
     const generateOptions = () => {
         return [
@@ -69,6 +70,7 @@ export default function AccountOptions({
                         setReloadUser={setReloadUser}
                     />
                 );
+                setModalSize({ width: '90%', height: '30%' });
                 break;
 
             case "email":
@@ -78,9 +80,9 @@ export default function AccountOptions({
                         setShowModal={setShowModal}
                         toastRef={toastRef}
                         setReloadUser={setReloadUser}
-                    
                     />
                 );
+                setModalSize({ width: '90%', height: '35%' });
                 break;
 
             case "password":
@@ -91,6 +93,7 @@ export default function AccountOptions({
                         setReloadUser={setReloadUser}
                     />
                 );
+                setModalSize({ width: '90%', height: '41%' });
                 break;
         }
         setShowModal(true);
@@ -99,70 +102,43 @@ export default function AccountOptions({
     const menuOptions = generateOptions();
 
     return (
-      <ScrollView>
-        <View style={styles.container}>
-          {map(menuOptions, (menu, index) => (
-            <ListItem
-              key={index}
-              style={styles.menuItem}
-              containerStyle={styles.listItemContainer}
-              onPress={menu.onPress}
-            >
-              <Icon
-                type="material-community"
-                name={menu.iconNameLeft}
-                color={menu. iconColorLeft}
-                containerStyle={styles.iconLeft}
-              />
-              <ListItem.Content>
-                <ListItem.Title style={styles.listItemTitle}>
-                  {menu.title}
-                </ListItem.Title>
-              </ListItem.Content>
-              <Icon
-                type="material-community"
-                name={menu.iconNameRight}
-                color={menu.iconColorRight}
-                containerStyle={styles.iconRight}
-              />
-            </ListItem>
-          ))}
-          <Modal isVisible={showModal} setVisible={setShowModal}>
-            {renderComponent}
-          </Modal>
-        </View>
-      </ScrollView>
+        <ScrollView>
+            <View style={styles.container}>
+                {map(menuOptions, (menu, index) => (
+                    <ListItem
+                        key={index}
+                        style={styles.menuItem}
+                        containerStyle={styles.listItemContainer}
+                        onPress={menu.onPress}
+                    >
+                        <Icon
+                            type="material-community"
+                            name={menu.iconNameLeft}
+                            color={menu. iconColorLeft}
+                            containerStyle={styles.iconLeft}
+                        />
+                        <ListItem.Content>
+                            <ListItem.Title style={styles.listItemTitle}>
+                                {menu.title}
+                            </ListItem.Title>
+                        </ListItem.Content>
+                        <Icon
+                            type="material-community"
+                            name={menu.iconNameRight}
+                            color={menu.iconColorRight}
+                            containerStyle={styles.iconRight}
+                        />
+                    </ListItem>
+                ))}
+                
+                <Modal isVisible={showModal} setVisible={setShowModal} size={modalSize}>
+                    {renderComponent}
+                </Modal>
+            </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: '#f7f7f7',
-    },
-    menuItem: {
-        borderBottomWidth: 1,
-        borderBottomColor: "#e0e0e0",
-    },
-    listItemContainer: {
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        marginVertical: 5,
-        marginHorizontal: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 5,
-    },
-    listItemTitle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#333',
-    },
-    iconLeft: {
-        marginRight: 10,
-    },
-    iconRight: {
-        marginLeft: 10,
-    }
+    // Estilos...
 });
