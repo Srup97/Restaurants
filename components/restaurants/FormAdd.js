@@ -3,12 +3,18 @@ import { StyleSheet, View } from 'react-native';
 import { Input } from 'react-native-elements';
 import CountryPicker from 'react-native-country-picker-modal'; // Importar CountryPicker
 
-export default function FormAdd({ formData, setFormData, formDataError, setIsVisibleMap }) {
+export default function FormAdd({
+  formData,
+  setFormData,
+  formDataError,
+  setIsVisibleMap,
+  locationRestaurant
+}) {
 
   const onChange = (e, type) => {
     setFormData({
       ...formData,
-      [type]: e.nativeEvent.text
+      [type]: e.nativeEvent.text,
     });
   };
 
@@ -28,11 +34,11 @@ export default function FormAdd({ formData, setFormData, formDataError, setIsVis
         onChange={(e) => onChange(e, "address")}
         errorMessage={formDataError.ErrorAddress}
         rightIcon={{
-          type: 'material-community',
-          name: 'map-marker-radius',
-          color: '#666',
+          type: "material-community",
+          name: "map-marker-radius",
+          color: locationRestaurant ?  "#442484" : "#666",
           size: 25,
-          onPress: () => setIsVisibleMap(true)
+          onPress: () => setIsVisibleMap(true),
         }}
       />
       <Input
@@ -50,18 +56,18 @@ export default function FormAdd({ formData, setFormData, formDataError, setIsVis
           withCallingCode
           withCallingCodeButton
           withModal
-          containerStyle={styles.countryPicker}  
+          containerStyle={styles.countryPicker}
           countryCode={formData.country}
           onChange={(e) => onChange(e, "country")}
           onSelect={(country) => {
             setFormData({
               ...formData,
               country: country.cca2,
-              callingCode: country.callingCode[0]
+              callingCode: country.callingCode[0],
             });
           }}
         />
-        
+
         <Input
           placeholder="WhatsApp del Restaurante..."
           keyboardType="phone-pad"

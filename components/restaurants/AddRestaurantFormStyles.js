@@ -39,13 +39,13 @@ export const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Color de fondo semi-transparente
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalImage: {
     width: widthScreen,
-    height: 400, // Ajusta la altura del modal según sea necesario
+    height: 400,
     resizeMode: 'contain',
   },
   closeButton: {
@@ -53,10 +53,36 @@ export const styles = StyleSheet.create({
     top: 20,
     right: 20,
   },
-
   mapStyle: {
     width: '100%',
-    height: 550,
+    height: 525, // Ajustado para una mejor visualización
   },
-  
+  viewMapBtn: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 30,
+  },
+
+  btnSaveLocationContainerSave: {
+    width: '70%',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  btnSaveLocationContainerCancel: {
+    width: '70%',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  btnSaveLocationStyleSave: {
+    backgroundColor: '#34A853',
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+  },
+  btnSaveLocationStyleCancel: {
+    backgroundColor: '#d9534f',
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+  },
 });
