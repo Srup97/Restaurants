@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import Navigation from './navigations/Navigation';
 import { LogBox } from 'react-native';
+import 'react-native-gesture-handler'
 
 LogBox.ignoreAllLogs();
 

@@ -1,116 +1,114 @@
-import { StyleSheet, View } from 'react-native';
 import React, { useState } from 'react';
-import { Button, Input } from 'react-native-elements';
-import CountryPicker from 'react-native-country-picker-modal';
+import { Dimensions, ScrollView, View, TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
+import { Button, Icon } from 'react-native-elements';
+import UploadImage from './UploadImage';
+import FormAdd from './FormAdd';
+import { styles } from './AddRestaurantFormStyles';
 import { ValidateData } from './ValidateDataAddRestaurant';
 
+import Modal from '../modal';
+
+const widthScreen = Dimensions.get("window").width;
+
 export default function AddRestaurantsForm({ toastRef, setLoading, navigation }) {
+  const [formData, setFormData] = useState(defaultFormData());
+  const [formDataError, setFormDataError] = useState(defaultFormDataError());
+  const [imageSelected, setImageSelected] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+   const [isVisibleMap, setIsVisibleMap] = useState(false)
+   const [locationRestaurant, setLocationRestaurant] = useState(null)
 
-    const [formData, setFormData] = useState(defaultFormData());
-    const [formDataError, setFormDataError] = useState(defaultFormDataError())
-
-    const addRestaurants = () => {
-        console.log(formData);
-        console.log('Agregando Restaurante');
-        // Aquí puedes agregar el código para guardar los datos del restaurante
-        if (!ValidateData(formData, setFormDataError)) {
-            return
-        }
-      };
-
-  return (
-    <View style={styles.viewContainer}>
-      <FormAdd formData={formData} setFormData={setFormData} formDataError={formDataError} setFormDataError={setFormDataError} />
-      <Button
-        title="Crear Restaurante"
-        onPress={addRestaurants}
-        buttonStyle={styles.btnAddRestaurant}
-        containerStyle={styles.container}
-      />
-    </View>
-  );
-}
-
-function FormAdd({ formData, setFormData, formDataError, setFormDataError}) {
-
-    const onChange = (e, type) => {
-
-        setFormData({
-            ...formData,
-            [type]: e.nativeEvent.text
-        })
-
+  const addRestaurants = () => {
+    console.log(formData);
+    console.log('Agregando Restaurante');
+    // Aquí puedes agregar el código para guardar los datos del restaurante
+    if (!ValidateData(formData, setFormDataError)) {
+      return;
     }
+  };
 
+  const openModal = (image) => {
+    setSelectedImage(image);
+    setModalVisible(true);
+  };
 
+  const closeModal = () => {
+    setModalVisible(false);
+  };
 
   return (
-    <View style={styles.viewForm}>
-      <Input
-        type="text"
-        placeholder="Nombre del Restaurante"
-        containerStyle={styles.input}
-        defaultValue={formData.name}
-        onChange={(e) => onChange(e, "name")}
-        errorMessage={formDataError.ErrorName}
-      />
-      <Input
-        type="text"
-        placeholder="Dirección del Restaurante"
-        containerStyle={styles.input}
-        defaultValue={formData.address}
-        onChange={(e) => onChange(e, "address")}
-        errorMessage={formDataError.ErrorAddress}
-      />
-      <Input
-        type="text"
-        keyboardType="email-address"
-        placeholder="Email del Restaurante"
-        containerStyle={styles.input}
-        defaultValue={formData.email}
-        onChange={(e) => onChange(e, "email")}
-        errorMessage={formDataError.ErrorEmail}
-      />
-      <View style={styles.phoneView}>
-        <CountryPicker
-          withFilter
-          withFlag
-          withFlagButton
-          withCallingCode
-          withCallingCodeButton
-          withModal
-          containerStyle={styles.countryPicker}
-          countryCode={formData.country}
-          onChange={(e) => onChange(e, "country")}
-          onSelect={(country) => {
-            setFormData({
-              ...formData,
-              country: country.cca2,
-              callingCode: country.callingCode[0]
-            });
-          }}
+    <ScrollView style={styles.scrollView}>
+      <TouchableOpacity onPress={() => openModal(imageSelected[0])}>
+        <View style={styles.viewPhoto}>
+          <Image
+            style={styles.image}
+            source={
+              imageSelected[0]
+                ? { uri: imageSelected[0] }
+                : require("../../assets/no-image.png")
+            }
+          />
+        </View>
+      </TouchableOpacity>
+      <View style={styles.viewContainer}>
+        <FormAdd formData={formData} setFormData={setFormData} formDataError={formDataError} setIsVisibleMap={setIsVisibleMap} />
+        <UploadImage
+          toastRef={toastRef}
+          imageSelected={imageSelected}
+          setImageSelected={setImageSelected}
         />
-        <Input
-          placeholder="WhatsApp del Restaurante..."
-          keyboardType="phone-pad"
-          errorMessage={formDataError.ErrorPhone}
-          defaultValue={formData.phone}
-          onChange={(e) => onChange(e, "phone")}
-          containerStyle={[styles.input, styles.inputPhone]}
+        <Button
+          title="Crear Restaurante"
+          onPress={addRestaurants}
+          buttonStyle={styles.btnAddRestaurant}
+          containerStyle={styles.btnContainer}
+        />
+
+        <MapRestaurants
+          isVisibleMap={isVisibleMap}
+          setIsVisibleMap={setIsVisibleMap}
+          setLocationRestaurant={setLocationRestaurant}
+          toastRef={toastRef}
         />
       </View>
-      
-      <Input
-        placeholder="Descripción del Restaurante..."
-        multiline
-        containerStyle={[styles.input, styles.textArea]}
-        onChange={(e) => onChange(e, "description")}
-        defaultValue={formData.description}
-        errorMessage={formDataError.ErrorDescription}
-        />
-    </View>
+
+      <ImageModal image={selectedImage} onClose={closeModal} setModalVisible={setModalVisible} modalVisible={modalVisible} />
+    </ScrollView>
   );
 }
+
+function MapRestaurants({ isVisibleMap, setIsVisibleMap, setLocationRestaurant, toastRef  }) {
+  return (
+        <Modal isVisible={isVisibleMap} setVisible={setIsVisibleMap}>
+            <Text>Map is here</Text>
+        </Modal>
+  );
+}
+
+
+const ImageModal = ({ image, onClose,setModalVisible, modalVisible  }) => {
+  // Verificar si hay una imagen seleccionada antes de mostrar el modal
+  if (!image) return null;
+
+  return (
+    <Modal  isVisible ={modalVisible} setVisible={setModalVisible} transparent={true}>
+      <TouchableOpacity
+        style={styles.modalContainer}
+        onPress={onClose} // Esto cierra el modal cuando se toca fuera de él
+      >
+        <View style={styles.modalBackground}>
+          {image ? (
+            <Image source={{ uri: image }} style={styles.modalImage} />
+          ) : null}
+          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+            <Icon type="material" name="close" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+    </Modal>
+  );
+};
 
 const defaultFormData = () => {
   return {
@@ -133,52 +131,3 @@ const defaultFormDataError = () => {
     ErrorAddress: "",
   };
 };
-
-const styles = StyleSheet.create({
-  viewContainer: {
-    height: '100%',
-  },
-  viewForm: {
-    marginHorizontal: 10,
-  },
-
-  textArea: {
-    height: 100,
-    width: '100%'
-},
- 
-  phoneView: {
-    flexDirection: 'row',
-    width: '80%',
- 
-  },
-
-  inputPhone: {
-    width: '90%',
-   paddingLeft: 10,
-   marginTop: -5 
-  },
-  
-  btnAddRestaurant: {
-    height: 50,
-    margin: 20,
-    backgroundColor: "#442484"
-  },
-
-  container: {
-    width: '100%',
-    margin: 0,
-    padding: 0
-  },
-
-  input: {
-    marginBottom: 20
-  },
-  
-
-
-  countryPicker: {
-    width: '20%',
-    marginLeft: 10 // Ajusta el margen izquierdo del CountryPicker
-  }
-});
