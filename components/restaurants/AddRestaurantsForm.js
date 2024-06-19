@@ -8,6 +8,9 @@ import { ValidateData } from './ValidateDataAddRestaurant';
 import Modal from '../modal';
 import { getCurrentLocation } from '../../utils/helpers';
 import MapView, { Marker } from 'react-native-maps';
+import { map } from 'lodash';
+import { addDocumentWithoutId, getCurrentUser, uploadImage } from '../../utils/actions';
+import uuid from 'random-uuid-v4';
 
 const widthScreen = Dimensions.get("window").width;
 
@@ -20,13 +23,56 @@ export default function AddRestaurantsForm({ toastRef, setLoading, navigation })
   const [isVisibleMap, setIsVisibleMap] = useState(false);
   const [locationRestaurant, setLocationRestaurant] = useState(null);
 
-  const addRestaurants = () => {
+  const addRestaurants = async () => {
     console.log(formData);
     console.log('Agregando Restaurante');
-    if (!ValidateData(formData, setFormDataError)) {
+    if (!ValidateData(formData, setFormDataError, locationRestaurant, imageSelected, toastRef)) {
       return;
     }
+
+    setLoading(true);
+
+    const responseUploadImages = await uploadImages()
+
+    const restaurants = {
+      name: formData.name,
+      address: formData.address,
+      email: formData.email,
+      phone: formData.phone,
+      description: formData.description,
+      callingCode: formData.callingCode,
+      location: locationRestaurant, // {latitude: 0, longitude: 0}
+      images: responseUploadImages,
+      rating: 0,
+      ratingTotal: 0,
+      quatityVoting: 0,
+      createdAt: new Date(),
+      creatyBy: getCurrentUser().uid
+    };
+
+    const responseAddDocument = await addDocumentWithoutId("restaurants", restaurants)
+    setLoading(false);
+
+    if(!responseAddDocument.statusResponse){
+      toastRef.current.show("Error al agregar el restaurante", 3000);
+      return;
+    }
+      navigation.navigate("restaurants");
   };
+
+
+  const uploadImages = async () => {
+    const imageUrl = []
+    await Promise.all(
+      map(imageSelected, async (image) => {
+        const response = await uploadImage(image, "restaurants", uuid())
+        if(response.statusResponse){
+          imageUrl.push(response.url)
+        }
+      })
+    )
+        return imageUrl
+  }
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -67,6 +113,7 @@ export default function AddRestaurantsForm({ toastRef, setLoading, navigation })
           imageSelected={imageSelected}
           setImageSelected={setImageSelected}
         />
+
         <Button
           title="Crear Restaurante"
           onPress={addRestaurants}
@@ -78,7 +125,6 @@ export default function AddRestaurantsForm({ toastRef, setLoading, navigation })
           isVisibleMap={isVisibleMap}
           setIsVisibleMap={setIsVisibleMap}
           setLocationRestaurant={setLocationRestaurant}
-          locationRestaurant={locationRestaurant}
           toastRef={toastRef}
         />
       </View>
@@ -88,7 +134,7 @@ export default function AddRestaurantsForm({ toastRef, setLoading, navigation })
   );
 }
 
-function MapRestaurants({ isVisibleMap, setIsVisibleMap, locationRestaurant, setLocationRestaurant, toastRef }) {
+function MapRestaurants({ isVisibleMap, setIsVisibleMap, setLocationRestaurant, toastRef }) {
 const [newRegion, setNewRegion] = useState(null);
   useEffect(() => {
     (async () => {

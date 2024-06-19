@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Alert } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Input, Icon, Button } from 'react-native-elements';
 import { validateDataLogin } from './ValidateDataLogin';
 import { useNavigation } from '@react-navigation/native';
 import Loading from '../Loading';
-import { loginWithEmailPassword } from '../../utils/actions';
+import { loginWithEmailPassword, resetPassword } from '../../utils/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginForm() {
@@ -54,10 +54,27 @@ export default function LoginForm() {
         try {
             await AsyncStorage.setItem('userEmail', formData.email);
         } catch (error) {
-            console.log(error);
+            console.log("AsyncStorage error: ", error);
         }
 
         navigation.navigate('account');
+    };
+
+    const handleResetPassword = async () => {
+        if (!formData.email) {
+            Alert.alert("Error", "Por favor ingrese su correo electrónico para restablecer la contraseña.");
+            return;
+        }
+        
+        setLoading(true);
+        const result = await resetPassword(formData.email);
+        setLoading(false);
+        
+        if (result.statusResponse) {
+            Alert.alert("Restablecimiento de Contraseña", "Se ha enviado un correo para restablecer la contraseña.");
+        } else {
+            Alert.alert("Error", result.error);
+        }
     };
 
     return (
@@ -87,12 +104,18 @@ export default function LoginForm() {
                 containerStyle={styles.input}
             />
             <Button
-                title={"Iniciar Sesion"}
+                title="Iniciar Sesión"
                 containerStyle={styles.btnContainer}
                 buttonStyle={styles.btn}
                 onPress={loginUser}
             />
-            <Loading isVisible={loading} text="Iniciando Sesion" />
+            <Text
+                style={styles.forgotPassword}
+                onPress={handleResetPassword}
+            >
+                He olvidado mi contraseña
+            </Text>
+            <Loading isVisible={loading} text="Iniciando Sesión" />
         </View>
     );
 }
@@ -121,5 +144,11 @@ const styles = StyleSheet.create({
     },
     btn: {
         backgroundColor: '#442484',
+    },
+    forgotPassword: {
+        marginTop: 15,
+        color: '#442484',
+        textAlign: 'center',
+        textDecorationLine: 'underline',
     },
 });

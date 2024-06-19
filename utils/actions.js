@@ -138,3 +138,17 @@ export const checkUserLogged = (callback) => {
         callback(user !== null);
     });
 };
+
+
+
+export const addDocumentWithoutId = async(collection, data) => {
+    const result = { statusResponse: true, error: null }
+
+    try {
+        await db.collection(collection).add(data)
+    } catch (error) {
+        result.statusResponse = false
+        result.error = error
+    }
+    return result     
+}

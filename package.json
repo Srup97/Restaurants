@@ -29,6 +29,7 @@
     "firebase": "^10.12.2",
     "firebaseui": "^6.1.0",
     "lodash": "^4.17.21",
+    "random-uuid-v4": "^0.0.9",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.2",

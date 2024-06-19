@@ -94,31 +94,29 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   input: {
-    marginBottom: 15,
+    marginBottom: 10,
   },
   phoneView: {
     flexDirection: 'row',
-    marginTop: 'auto',
+    marginTop: '10',
     marginBottom: 'auto'
   },
 
   inputPhone: {
     width: '80%',
-    marginBottom: -5,
+    marginBottom: 10,
     paddingLeft: 15,
 
       
   },
   textArea: {
-    height: 100,
+    height: 'auto',
     width: '100%',
+    marginBottom: -5,
   },
 
   countryPicker: {
     width: '100%',
-    marginRight: 100,
-    marginTop: 100,
-    paddingLeft: 1000,
-    marginBottom: 100,
+  
   },
 });
