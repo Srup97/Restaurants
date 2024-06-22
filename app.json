@@ -20,7 +20,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.srup97.restaurants" 
+      "package": "com.srup97.restaurants"
     },
     "permissions": [
       "CAMERA",
@@ -28,12 +28,15 @@
       "WRITE_EXTERNAL_STORAGE",
       "LOCATION",
       "ACCESS_COARSE_LOCATION",
-      "ACCESS_FINE_LOCATION",
-
+      "ACCESS_FINE_LOCATION"
     ],
-
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "1f3cc117-212d-4980-b789-3ef837c235c4"
+      }
     }
   }
 }
