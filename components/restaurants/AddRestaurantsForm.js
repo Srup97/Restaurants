@@ -13,6 +13,7 @@ import { addDocumentWithoutId, getCurrentUser, uploadImage } from '../../utils/a
 import uuid from 'random-uuid-v4';
 
 const widthScreen = Dimensions.get("window").width;
+const heightScreen = Dimensions.get("window").height;
 
 export default function AddRestaurantsForm({ toastRef, setLoading, navigation }) {
   const [formData, setFormData] = useState(defaultFormData());
@@ -156,7 +157,7 @@ const [newRegion, setNewRegion] = useState(null);
     <Modal
       isVisible={isVisibleMap}
       setVisible={setIsVisibleMap}
-      size={{ width: "90%", height: "80%" }}
+      size={{ width: "90%", height:{heightScreen} }}
     >
       <View>
         {newRegion && (

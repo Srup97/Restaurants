@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Input } from 'react-native-elements';
-import CountryPicker from 'react-native-country-picker-modal'; // Importar CountryPicker
+import CountryPicker from 'react-native-country-picker-modal';
+import { Picker } from '@react-native-picker/picker';
 
 export default function FormAdd({
   formData,
@@ -10,12 +11,28 @@ export default function FormAdd({
   setIsVisibleMap,
   locationRestaurant
 }) {
+  const [callingCodes, setCallingCodes] = useState(['1829', '1809', '1849']);
 
   const onChange = (e, type) => {
     setFormData({
       ...formData,
       [type]: e.nativeEvent.text,
     });
+  };
+
+  const onSelectCountry = (country) => {
+    let codes = country.callingCode;
+    if (country.cca2 === 'DO') {
+      codes = ['1829', '1809', '1849'];
+    }
+
+    setFormData({
+      ...formData,
+      country: country.cca2,
+      callingCode: codes[0],
+    });
+
+    setCallingCodes(codes);
   };
 
   return (
@@ -36,13 +53,14 @@ export default function FormAdd({
         rightIcon={{
           type: "material-community",
           name: "map-marker-radius",
-          color: locationRestaurant ?  "#442484" : "#666",
+          color: locationRestaurant ? "#442484" : "#666",
           size: 25,
           onPress: () => setIsVisibleMap(true),
         }}
       />
       <Input
         placeholder="Email del Restaurante"
+        keyboardType="email-address"
         containerStyle={styles.input}
         defaultValue={formData.email}
         onChange={(e) => onChange(e, "email")}
@@ -52,29 +70,33 @@ export default function FormAdd({
         <CountryPicker
           withFilter
           withFlag
-          withFlagButton
-          withCallingCode
-          withCallingCodeButton
-          withModal
-          containerStyle={styles.countryPicker}
+          containerButtonStyle={styles.countryPicker}
           countryCode={formData.country}
-          onChange={(e) => onChange(e, "country")}
-          onSelect={(country) => {
-            setFormData({
-              ...formData,
-              country: country.cca2,
-              callingCode: country.callingCode[0],
-            });
-          }}
+          onSelect={onSelectCountry}
         />
-
         <Input
-          placeholder="WhatsApp del Restaurante..."
+          placeholder="WhatsApp"
           keyboardType="phone-pad"
           errorMessage={formDataError.ErrorPhone}
           defaultValue={formData.phone}
           onChange={(e) => onChange(e, "phone")}
           containerStyle={[styles.input, styles.inputPhone]}
+          inputContainerStyle={styles.inputContainerStyle}
+          leftIcon={
+            <View style={styles.pickerWrapper}>
+              <Picker
+                selectedValue={formData.callingCode}
+                style={styles.picker}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, callingCode: value })
+                }
+              >
+                {callingCodes.map((code) => (
+                  <Picker.Item key={code} label={`+${code}`} value={code} style={styles.pickerItem} />
+                ))}
+              </Picker>
+            </View>
+          }
         />
       </View>
       <Input
@@ -91,32 +113,52 @@ export default function FormAdd({
 
 const styles = StyleSheet.create({
   viewForm: {
-    marginHorizontal: 10,
+    marginHorizontal: 20,
+    marginTop: 30,
   },
   input: {
-    marginBottom: 10,
+    marginBottom: 15,
   },
   phoneView: {
     flexDirection: 'row',
-    marginTop: '10',
-    marginBottom: 'auto'
+    marginBottom: 20,
+    alignItems: 'center',
   },
-
   inputPhone: {
-    width: '80%',
-    marginBottom: 10,
-    paddingLeft: 15,
-
-      
+    flex: 1,
+    marginBottom: 0,
   },
   textArea: {
-    height: 'auto',
-    width: '100%',
-    marginBottom: -5,
+    height: 150,
+    marginBottom: 20,
+  },
+  countryPicker: {
+    width: '15%',
+    justifyContent: 'center',
+  },
+  pickerWrapper: {
+    width: 90, // Ajuste del tamaño del Picker
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    marginRight: 5, // Reducción del margen derecho para acercar el Picker al código de llamada
+  },
+  picker: {
+    height: 40,
+    width: '150%',
+  },
+  pickerItem: {
+    fontSize: 15, // Ajuste del tamaño de fuente del Picker.Item si es necesario
+    paddingHorizontal: 20,  // Ajuste del espacio interno horizontal para reducir el espacio alrededor del texto
   },
 
-  countryPicker: {
-    width: '100%',
-  
+  inputContainerStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingLeft: 5, // Ajuste del espacio interno para que el Picker no esté demasiado cerca del borde
   },
 });

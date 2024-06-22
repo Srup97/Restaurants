@@ -20,7 +20,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.yourcompany.yourappname" 
+      "package": "com.srup97.restaurants" 
     },
     "permissions": [
       "CAMERA",
@@ -28,7 +28,8 @@
       "WRITE_EXTERNAL_STORAGE",
       "LOCATION",
       "ACCESS_COARSE_LOCATION",
-      "ACCESS_FINE_LOCATION"
+      "ACCESS_FINE_LOCATION",
+
     ],
 
     "web": {
