@@ -22,23 +22,11 @@
     "android": {
       "package": "com.srup97.restaurants"
     },
-    "config": {
-      "googleMaps":{
-        "apiKey": "AIzaSyAkrNtMHdCbpsm5-JMsQcEET6iIeL-TmJ0"
-      }
-    },
-    "permissions": [
-      "CAMERA",
-      "READ_EXTERNAL_STORAGE",
-      "WRITE_EXTERNAL_STORAGE",
-      "LOCATION",
-      "ACCESS_COARSE_LOCATION",
-      "ACCESS_FINE_LOCATION"
-    ],
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
+      "googleMapsApiKey": "AIzaSyAkrNtMHdCbpsm5-JMsQcEET6iIeL-TmJ0",
       "eas": {
         "projectId": "1f3cc117-212d-4980-b789-3ef837c235c4"
       }
