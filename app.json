@@ -22,6 +22,11 @@
     "android": {
       "package": "com.srup97.restaurants"
     },
+    "config": {
+      "googleMaps":{
+        "apiKey": "AIzaSyAkrNtMHdCbpsm5-JMsQcEET6iIeL-TmJ0"
+      }
+    },
     "permissions": [
       "CAMERA",
       "READ_EXTERNAL_STORAGE",
