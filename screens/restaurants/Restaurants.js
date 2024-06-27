@@ -1,12 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { checkUserLogged } from '../../utils/actions';
 import Loading from '../../components/Loading';
+import { useFocusEffect } from '@react-navigation/native';
+import { getRestaurants } from '../../utils/actions';
+import ListRestaurants from '../../components/restaurants/ListRestaurants';
 
 export default function Restaurants({navigation}) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [startRestaurants, setStartRestaurants] = useState(null)
+  const [restaurants, setRestaurants] = useState([])
+
+  const limitRestaurants = 7;
 
   useEffect(() => {
     setLoading(true);
@@ -17,13 +24,28 @@ export default function Restaurants({navigation}) {
     return () => unsubscribe;
   }, []);
 
+  useFocusEffect(
+    useCallback (async () => {
+      setLoading(true);
+      const response = await getRestaurants(limitRestaurants);
+      if(response.statusResponse) {
+        setStartRestaurants(response.startRestaurants);
+        setRestaurants(response.restaurants);
+      }
+      setLoading(false);
+    }, [])
+  )
+
+
   if (loading) {
     return <Loading isVisible={loading} text="Cargando..." />;
   }
 
   return (
     <View style={styles.viewBody}>
-      <Text>Restaurants....</Text>
+        <ListRestaurants
+          restaurants={restaurants}
+        />
       {user && (
         <Icon
           type='material-community'

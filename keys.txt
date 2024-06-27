@@ -1,1 +1,23 @@
 AIzaSyAkrNtMHdCbpsm5-JMsQcEET6iIeL-TmJ0
+
+
+Android Credentials
+Project                 restaurants
+Application Identifier  com.srup97.restaurants
+
+Push Notifications (FCM Legacy)
+  None assigned yet
+
+Push Notifications (FCM V1): Google Service Account Key For FCM V1
+  None assigned yet
+
+Submissions: Google Service Account Key for Play Store Submissions
+  None assigned yet
+
+Configuration: Build Credentials JLRppdYHKY (Default)
+Keystore
+Type                JKS
+Key Alias           14ef12aa05455781924a5f2ced08d25e
+MD5 Fingerprint     AB:83:09:35:6F:11:E3:4E:20:A7:F3:1A:68:D5:74:FC
+SHA1 Fingerprint    F6:4D:B5:7D:37:13:E6:58:C5:06:B3:87:40:2C:C0:63:20:3C:9D:40
+SHA256 Fingerprint  B8:D0:70:D3:C6:27:F2:6B:7E:AB:44:AA:CA:9E:84:4A:26:92:1B:6B:EA:CE:D1:BA:20:ED:A2:E6:79:04:25:B9
