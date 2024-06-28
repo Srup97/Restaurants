@@ -86,5 +86,6 @@ const styles = StyleSheet.create({
   restaurantDescription: {
     paddingTop: 2,
     color: "grey",
+    width: "90%"
   },
 });
