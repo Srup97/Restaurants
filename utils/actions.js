@@ -153,25 +153,57 @@ export const addDocumentWithoutId = async(collection, data) => {
     return result     
 }
 
-export const getRestaurants = async(limitRestaurants) => {
-    const result = { statusResponse: true, error: null, restaurants: [], startRestaurants : null }
+export const getRestaurants = async (limitRestaurants) => {
+    const result = { statusResponse: true, error: null, restaurants: [], startRestaurants: null };
 
     try {
-        const response = await db.collection("restaurants").orderBy("createdAt", "desc").limit(limitRestaurants).get();
-            if(response.docs.length > 0) {
-                result.startRestaurants = response.docs[response.docs.length - 1]
-            }
+        const response = await db
+            .collection("restaurants")
+            .orderBy("createdAt", "desc")
+            .limit(limitRestaurants)
+            .get();
 
-            response.forEach((doc) => {
-                const restaurant = doc.data();
-                restaurant.id = doc.id;
-                result.restaurants.push(restaurant);
-            });
+        if (response.docs.length > 0) {
+            result.startRestaurants = response.docs[response.docs.length - 1];
+        } else {
+        }
+
+        response.forEach((doc) => {
+            const restaurant = doc.data();
+            restaurant.id = doc.id;
+            result.restaurants.push(restaurant);
+        });
 
     } catch (error) {
-        result.statusResponse = false
-        result.error = error
+        console.error('Error obteniendo los restaurantes:', error); // Log de error más detallado
+        result.statusResponse = false;
+        result.error = error;
     }
 
-    return result
+    return result;
+};
+
+
+export const getMoreRestaurants = async (limit, start) => {
+  try {
+    const response = await db.collection("restaurants")
+      .orderBy("createdAt", "desc")
+      .startAfter(start)
+      .limit(limit)
+      .get();
+
+    const restaurants = [];
+    response.forEach((doc) => {
+      const restaurant = doc.data();
+      restaurant.id = doc.id;
+      restaurants.push(restaurant);
+    });
+
+    const startRestaurants = response.docs[response.docs.length - 1];
+    
+    return { statusResponse: true, restaurants, startRestaurants };
+  } catch (error) {
+    console.error("Error fetching more restaurants:", error);
+    return { statusResponse: false, error };
+  }
 };

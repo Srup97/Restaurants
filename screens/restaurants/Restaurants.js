@@ -2,10 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, Text, View, RefreshControl, FlatList } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { size } from 'lodash';
-import { checkUserLogged } from '../../utils/actions';
+import { checkUserLogged, getRestaurants, getMoreRestaurants } from '../../utils/actions';
 import Loading from '../../components/Loading';
-import { getRestaurants } from '../../utils/actions';
 import ListRestaurants from '../../components/restaurants/ListRestaurants';
 
 export default function Restaurants({ navigation }) {
@@ -14,14 +12,16 @@ export default function Restaurants({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const [startRestaurants, setStartRestaurants] = useState(null);
   const [restaurants, setRestaurants] = useState([]);
-
-  const limitRestaurants = 7;
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [moreRestaurants, setMoreRestaurants] = useState(true); // Estado para controlar si hay más restaurantes para cargar
+  const limitRestaurants = 8;
 
   useEffect(() => {
-    setLoading(true);
     const unsubscribe = checkUserLogged((isLogged) => {
       setUser(isLogged);
-      setLoading(false);
+      if (!isLogged) {
+        setLoading(false);
+      }
     });
     return () => unsubscribe;
   }, []);
@@ -38,8 +38,25 @@ export default function Restaurants({ navigation }) {
     if (response.statusResponse) {
       setStartRestaurants(response.startRestaurants);
       setRestaurants(response.restaurants);
+      setMoreRestaurants(response.restaurants.length === limitRestaurants); 
     }
     setLoading(false);
+  };
+
+  const handleLoadMore = async () => {
+    if (loadingMore || !startRestaurants || !moreRestaurants) return;
+    setLoadingMore(true);
+    const response = await getMoreRestaurants(limitRestaurants, startRestaurants);
+    if (response.statusResponse) {
+      if (response.restaurants.length > 0) {
+        setStartRestaurants(response.startRestaurants);
+        setRestaurants(prevRestaurants => [...prevRestaurants, ...response.restaurants]);
+        setMoreRestaurants(response.restaurants.length === limitRestaurants); 
+      } else {
+        setMoreRestaurants(false); 
+      }
+    }
+    setLoadingMore(false);
   };
 
   const onRefresh = useCallback(() => {
@@ -47,36 +64,37 @@ export default function Restaurants({ navigation }) {
     fetchData().then(() => setRefreshing(false));
   }, []);
 
-  if (loading) {
+  if (loading && !refreshing) {
     return <Loading isVisible={loading} text="Cargando..." />;
   }
 
   return (
     <View style={styles.viewBody}>
-      {
-        size(restaurants) > 0 ? (
-          <FlatList
-            data={restaurants}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <ListRestaurants
-                restaurants={restaurants}
-              />
-            )}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-              />
-            }
+      <FlatList
+        data={restaurants}
+        keyExtractor={(item, index) => item.id || index.toString()}
+        renderItem={({ item }) => (
+          <ListRestaurants restaurant={item} navigation={navigation} />
+        )}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['#442484']}
           />
-        ) : (
+        }
+        ListEmptyComponent={
           <View style={styles.noRestaurantsView}>
             <Text style={styles.noRestaurantsText}>No hay restaurantes</Text>
           </View>
-        )
-      }
-
+        }
+        contentContainerStyle={styles.flatListContainer}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.3}
+        ListFooterComponent={
+          loadingMore && <Loading isVisible={true} text="Cargando más restaurantes..." />
+        }
+      />
       {user && (
         <Icon
           type='material-community'
@@ -94,13 +112,13 @@ export default function Restaurants({ navigation }) {
 const styles = StyleSheet.create({
   viewBody: {
     flex: 1,
-    backgroundColor: '#FFF'
+    backgroundColor: '#FFF',
   },
   btnContainer: {
     position: 'absolute',
     bottom: 10,
     right: 10,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 2,
       height: 2,
@@ -118,5 +136,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: 'grey',
-  }
+  },
+  flatListContainer: {
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+  },
 });

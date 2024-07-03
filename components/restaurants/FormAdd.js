@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Input } from 'react-native-elements';
 import CountryPicker from 'react-native-country-picker-modal';
@@ -34,6 +34,16 @@ export default function FormAdd({
 
     setCallingCodes(codes);
   };
+
+  // Actualiza la dirección cuando se selecciona la ubicación en el mapa
+  useEffect(() => {
+    if (locationRestaurant) {
+      setFormData({
+        ...formData,
+        address: `${locationRestaurant.latitude}, ${locationRestaurant.longitude}`,
+      });
+    }
+  }, [locationRestaurant]);
 
   return (
     <View style={styles.viewForm}>

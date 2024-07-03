@@ -25,8 +25,6 @@ export default function AddRestaurantsForm({ toastRef, setLoading, navigation })
   const [locationRestaurant, setLocationRestaurant] = useState(null);
 
   const addRestaurants = async () => {
-    console.log(formData);
-    console.log('Agregando Restaurante');
     if (!ValidateData(formData, setFormDataError, locationRestaurant, imageSelected, toastRef)) {
       return;
     }
@@ -42,7 +40,7 @@ export default function AddRestaurantsForm({ toastRef, setLoading, navigation })
       phone: formData.phone,
       description: formData.description,
       callingCode: formData.callingCode,
-      location: locationRestaurant, // {latitude: 0, longitude: 0}
+      location: locationRestaurant,
       images: responseUploadImages,
       rating: 0,
       ratingTotal: 0,
@@ -60,7 +58,6 @@ export default function AddRestaurantsForm({ toastRef, setLoading, navigation })
     }
       navigation.navigate("restaurants");
   };
-
 
   const uploadImages = async () => {
     const imageUrl = []
@@ -102,12 +99,12 @@ export default function AddRestaurantsForm({ toastRef, setLoading, navigation })
       <View style={styles.viewContainer}>
 
         <FormAdd
-        formData={formData}
-         setFormData={setFormData}
+          formData={formData}
+          setFormData={setFormData}
           formDataError={formDataError}
-           setIsVisibleMap={setIsVisibleMap}
-           locationRestaurant={locationRestaurant}
-            />
+          setIsVisibleMap={setIsVisibleMap}
+          locationRestaurant={locationRestaurant}
+        />
 
         <UploadImage
           toastRef={toastRef}
@@ -136,7 +133,8 @@ export default function AddRestaurantsForm({ toastRef, setLoading, navigation })
 }
 
 function MapRestaurants({ isVisibleMap, setIsVisibleMap, setLocationRestaurant, toastRef }) {
-const [newRegion, setNewRegion] = useState(null);
+  const [newRegion, setNewRegion] = useState(null);
+
   useEffect(() => {
     (async () => {
       const response = await getCurrentLocation();
@@ -145,38 +143,41 @@ const [newRegion, setNewRegion] = useState(null);
       }
     })();
   }, []);
-  
-  
+
   const confirmLocation = () => {
-      setLocationRestaurant(newRegion)
-      toastRef.current.show("Ubicación guardada correctamente");
-      setIsVisibleMap(false);
+    setLocationRestaurant(newRegion);
+    toastRef.current.show("Ubicación guardada correctamente");
+    setIsVisibleMap(false);
+  }
+
+  const handleMapPress = (e) => {
+    const { latitude, longitude } = e.nativeEvent.coordinate;
+    setNewRegion({ ...newRegion, latitude, longitude });
   }
 
   return (
     <Modal
       isVisible={isVisibleMap}
       setVisible={setIsVisibleMap}
-      size={{ width: "90%", height:{heightScreen} }}
+      size={{ width: "90%", height: heightScreen }}
     >
       <View>
         {newRegion && (
           <View>
             <MapView
-             style={styles.mapStyle}
-             initialRegion={newRegion}
-             showsUserLocation
-             onRegionChange={(region) => setNewRegion(region)}
+              style={styles.mapStyle}
+              initialRegion={newRegion}
+              showsUserLocation
+              onPress={handleMapPress}
             >
-             
-            <Marker
-              coordinate={{
-                latitude: newRegion.latitude,
-                longitude: newRegion.longitude,
-              }}
-              draggable
+              <Marker
+                coordinate={{
+                  latitude: newRegion.latitude,
+                  longitude: newRegion.longitude,
+                }}
+                draggable
               />
-              </MapView>
+            </MapView>
           </View>
         )}
         <View style={styles.viewMapBtn}>
@@ -190,10 +191,7 @@ const [newRegion, setNewRegion] = useState(null);
             title="Cancelar"
             containerStyle={styles.btnSaveLocationContainerCancel}
             buttonStyle={styles.btnSaveLocationStyleCancel}
-            onPress={()=>{
-              setIsVisibleMap(false);
-            }
-          }
+            onPress={() => setIsVisibleMap(false)}
           />
         </View>
       </View>
