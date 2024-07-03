@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, ScrollView, View, TouchableOpacity, Image } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Dimensions, ScrollView, View, TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
+import { Button, Icon } from 'react-native-elements';
 import UploadImage from './UploadImage';
 import FormAdd from './FormAdd';
+import { styles } from './AddRestaurantFormStyles';
+import { ValidateData } from './ValidateDataAddRestaurant';
 import Modal from '../modal';
 import { getCurrentLocation } from '../../utils/helpers';
 import MapView, { Marker } from 'react-native-maps';
 import { map } from 'lodash';
 import { addDocumentWithoutId, getCurrentUser, uploadImage } from '../../utils/actions';
 import uuid from 'random-uuid-v4';
+
 import { checkUserLogged } from '../../utils/actions';
 
-import { styles } from './AddRestaurantFormStyles'; // Asegúrate de importar tus estilos correctamente
 
 const widthScreen = Dimensions.get("window").width;
 const heightScreen = Dimensions.get("window").height;
