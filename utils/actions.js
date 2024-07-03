@@ -133,12 +133,12 @@ export const updatePassword = async(password) => {
     return result     
 }
 
+// En tu archivo de acciones (actions.js, por ejemplo)
 export const checkUserLogged = (callback) => {
-    firebase.auth().onAuthStateChanged((user) => {
-        callback(user !== null);
-    });
+  return firebase.auth().onAuthStateChanged((user) => {
+    callback(user !== null);
+  });
 };
-
 
 
 export const addDocumentWithoutId = async(collection, data) => {

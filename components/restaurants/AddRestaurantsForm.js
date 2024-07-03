@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, ScrollView, View, TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
-import { Button, Icon } from 'react-native-elements';
+import { Dimensions, ScrollView, View, TouchableOpacity, Image } from 'react-native';
+import { Button } from 'react-native-elements';
 import UploadImage from './UploadImage';
 import FormAdd from './FormAdd';
-import { styles } from './AddRestaurantFormStyles';
-import { ValidateData } from './ValidateDataAddRestaurant';
 import Modal from '../modal';
 import { getCurrentLocation } from '../../utils/helpers';
 import MapView, { Marker } from 'react-native-maps';
 import { map } from 'lodash';
 import { addDocumentWithoutId, getCurrentUser, uploadImage } from '../../utils/actions';
 import uuid from 'random-uuid-v4';
+import { checkUserLogged } from '../../utils/actions';
+
+import { styles } from './AddRestaurantFormStyles'; // Asegúrate de importar tus estilos correctamente
 
 const widthScreen = Dimensions.get("window").width;
 const heightScreen = Dimensions.get("window").height;
 
-export default function AddRestaurantsForm({ toastRef, setLoading, navigation }) {
+const AddRestaurantsForm = ({ toastRef, setLoading, navigation }) => {
   const [formData, setFormData] = useState(defaultFormData());
   const [formDataError, setFormDataError] = useState(defaultFormDataError());
   const [imageSelected, setImageSelected] = useState([]);
@@ -23,6 +24,19 @@ export default function AddRestaurantsForm({ toastRef, setLoading, navigation })
   const [modalVisible, setModalVisible] = useState(false);
   const [isVisibleMap, setIsVisibleMap] = useState(false);
   const [locationRestaurant, setLocationRestaurant] = useState(null);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = checkUserLogged((isLogged) => {
+      setUser(isLogged);
+      if (!isLogged) {
+        setLoading(false);
+        // Navegar a 'restaurants' si el usuario no está logueado
+        navigation.navigate('restaurants');
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   const addRestaurants = async () => {
     if (!ValidateData(formData, setFormDataError, locationRestaurant, imageSelected, toastRef)) {
@@ -31,7 +45,7 @@ export default function AddRestaurantsForm({ toastRef, setLoading, navigation })
 
     setLoading(true);
 
-    const responseUploadImages = await uploadImages()
+    const responseUploadImages = await uploadImages();
 
     const restaurants = {
       name: formData.name,
@@ -46,31 +60,31 @@ export default function AddRestaurantsForm({ toastRef, setLoading, navigation })
       ratingTotal: 0,
       quatityVoting: 0,
       createdAt: new Date(),
-      creatyBy: getCurrentUser().uid
+      creatyBy: getCurrentUser().uid,
     };
 
-    const responseAddDocument = await addDocumentWithoutId("restaurants", restaurants)
+    const responseAddDocument = await addDocumentWithoutId('restaurants', restaurants);
     setLoading(false);
 
-    if(!responseAddDocument.statusResponse){
-      toastRef.current.show("Error al agregar el restaurante", 3000);
+    if (!responseAddDocument.statusResponse) {
+      toastRef.current.show('Error al agregar el restaurante', 3000);
       return;
     }
-      navigation.navigate("restaurants");
+    navigation.navigate('restaurants');
   };
 
   const uploadImages = async () => {
-    const imageUrl = []
+    const imageUrl = [];
     await Promise.all(
       map(imageSelected, async (image) => {
-        const response = await uploadImage(image, "restaurants", uuid())
-        if(response.statusResponse){
-          imageUrl.push(response.url)
+        const response = await uploadImage(image, 'restaurants', uuid());
+        if (response.statusResponse) {
+          imageUrl.push(response.url);
         }
       })
-    )
-        return imageUrl
-  }
+    );
+    return imageUrl;
+  };
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -87,17 +101,12 @@ export default function AddRestaurantsForm({ toastRef, setLoading, navigation })
         <View style={styles.viewPhoto}>
           <Image
             style={styles.image}
-            source={
-              imageSelected[0]
-                ? { uri: imageSelected[0] }
-                : require("../../assets/no-image.png")
-            }
+            source={imageSelected[0] ? { uri: imageSelected[0] } : require('../../assets/no-image.png')}
           />
         </View>
       </TouchableOpacity>
-      
-      <View style={styles.viewContainer}>
 
+      <View style={styles.viewContainer}>
         <FormAdd
           formData={formData}
           setFormData={setFormData}
@@ -106,11 +115,7 @@ export default function AddRestaurantsForm({ toastRef, setLoading, navigation })
           locationRestaurant={locationRestaurant}
         />
 
-        <UploadImage
-          toastRef={toastRef}
-          imageSelected={imageSelected}
-          setImageSelected={setImageSelected}
-        />
+        <UploadImage toastRef={toastRef} imageSelected={imageSelected} setImageSelected={setImageSelected} />
 
         <Button
           title="Crear Restaurante"
@@ -130,7 +135,7 @@ export default function AddRestaurantsForm({ toastRef, setLoading, navigation })
       <ImageModal image={selectedImage} onClose={closeModal} setModalVisible={setModalVisible} modalVisible={modalVisible} />
     </ScrollView>
   );
-}
+};
 
 function MapRestaurants({ isVisibleMap, setIsVisibleMap, setLocationRestaurant, toastRef }) {
   const [newRegion, setNewRegion] = useState(null);
@@ -220,25 +225,22 @@ const ImageModal = ({ image, onClose, setModalVisible, modalVisible }) => {
     </Modal>
   );
 };
+const defaultFormData = () => ({
+  name: '',
+  description: '',
+  phone: '',
+  email: '',
+  address: '',
+  country: 'DO',
+  callingCode: '1-809',
+});
 
-const defaultFormData = () => {
-  return {
-    name: "",
-    description: "",
-    phone: "",
-    email: "",
-    address: "",
-    country: "DO",
-    callingCode: "1-809",
-  };
-};
+const defaultFormDataError = () => ({
+  ErrorName: '',
+  ErrorDescription: '',
+  ErrorPhone: '',
+  ErrorEmail: '',
+  ErrorAddress: '',
+});
 
-const defaultFormDataError = () => {
-  return {
-    ErrorName: "",
-    ErrorDescription: "",
-    ErrorPhone: "",
-    ErrorEmail: "",
-    ErrorAddress: "",
-  };
-};
+export default AddRestaurantsForm;
