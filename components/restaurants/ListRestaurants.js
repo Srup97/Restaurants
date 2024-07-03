@@ -4,7 +4,7 @@ import { Image } from 'react-native-elements';
 import { formatPhone } from '../../utils/helpers';
 import { size } from 'lodash';
 
-export default function LitRestaurants({ restaurants, navigation }) {
+export default function ListRestaurants({ restaurants, navigation }) {
   const renderRestaurant = ({ item }) => {
     const { id, images, name, description, rating, location, address, phone, callingCode } = item;
     const imageRestaurant = images[0];
@@ -38,6 +38,7 @@ export default function LitRestaurants({ restaurants, navigation }) {
   };
 
   const handleRestaurantPress = (restaurant) => {
+    console.log("hola");
     // Handle navigation to restaurant details screen
     //navigation.navigate('RestaurantDetails', { restaurant });
   };

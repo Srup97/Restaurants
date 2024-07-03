@@ -1,3 +1,4 @@
+// Restaurants.js
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, Text, View, RefreshControl, FlatList } from 'react-native';
@@ -29,12 +30,14 @@ export default function Restaurants({ navigation }) {
   useFocusEffect(
     useCallback(() => {
       fetchData();
+
     }, [])
   );
 
   const fetchData = async () => {
     setLoading(true);
     const response = await getRestaurants(limitRestaurants);
+
     if (response.statusResponse) {
       setStartRestaurants(response.startRestaurants);
       setRestaurants(response.restaurants);
