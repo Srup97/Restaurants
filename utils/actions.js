@@ -207,3 +207,37 @@ export const getMoreRestaurants = async (limit, start) => {
     return { statusResponse: false, error };
   }
 };
+
+
+export const getDocumentById = async (collection, id) => {
+    const result = { statusResponse: true, error: null, document: null };
+  
+    try {
+      const response = await db.collection(collection).doc(id).get();
+      if (response.exists) {
+        result.document = response.data();
+        result.document.id = response.id;
+      } else {
+        result.statusResponse = false;
+        result.error = 'Documento no encontrado';
+      }
+    } catch (error) {
+      result.statusResponse = false;
+      result.error = error;
+      console.error('Error obteniendo el documento:', error); // Agregar log de error
+    }
+    return result;
+  };
+
+  export const resetPassword = async (email) => {
+    const result = { statusResponse: true, error: null };
+
+    try {
+        await firebase.auth().sendPasswordResetEmail(email);
+    } catch (error) {
+        result.statusResponse = false;
+        result.error = error.message;
+    }
+
+    return result;
+};

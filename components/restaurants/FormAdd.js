@@ -36,14 +36,6 @@ export default function FormAdd({
   };
 
   // Actualiza la dirección cuando se selecciona la ubicación en el mapa
-  useEffect(() => {
-    if (locationRestaurant) {
-      setFormData({
-        ...formData,
-        address: `${locationRestaurant.latitude}, ${locationRestaurant.longitude}`,
-      });
-    }
-  }, [locationRestaurant]);
 
   return (
     <View style={styles.viewForm}>

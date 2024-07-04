@@ -1,3 +1,4 @@
+//App.js
 import { StyleSheet, Text, View } from 'react-native';
 import Navigation from './navigations/Navigation';
 import { LogBox } from 'react-native';

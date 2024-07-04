@@ -8,12 +8,18 @@ export default function ListRestaurants({ restaurant, navigation }) {
   const imageRestaurant = images[0];
 
   const handleRestaurantPress = () => {
-    // Handle navigation to restaurant details screen
-    // navigation.navigate('RestaurantDetails', { restaurant });
+     navigation.navigate('RestaurantDetails', { restaurant });
   };
 
+
+  const goRestaurant = () => {
+      navigation.navigate('restaurant', { id, name});
+    
+    }
+
+
   return (
-    <TouchableOpacity onPress={handleRestaurantPress}>
+    <TouchableOpacity onPress={goRestaurant}>
       <View style={styles.viewRestaurant}>
         <View style={styles.viewRestaurantImage}>
           <Image

@@ -115,7 +115,7 @@ export default function LoginForm() {
             >
                 He olvidado mi contraseña
             </Text>
-            <Loading isVisible={loading} text="Iniciando Sesión" />
+            <Loading isVisible={loading} text="Cargando..." />
         </View>
     );
 }

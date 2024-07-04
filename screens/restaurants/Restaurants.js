@@ -77,7 +77,9 @@ export default function Restaurants({ navigation }) {
         data={restaurants}
         keyExtractor={(item, index) => item.id || index.toString()}
         renderItem={({ item }) => (
-          <ListRestaurants restaurant={item} navigation={navigation} />
+          <ListRestaurants
+           restaurant={item}
+            navigation={navigation} />
         )}
         refreshControl={
           <RefreshControl
